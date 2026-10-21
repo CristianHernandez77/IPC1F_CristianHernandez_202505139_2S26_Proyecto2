@@ -31,9 +31,19 @@ public class Espacio {
 
     public void ocupar(Vehiculo v){
         this.vehiculo = v;
+        //--------------------------------------------------------------------------------
+        // Ocupar un espacio y quedar ESTACIONADO pasan juntos, dentro del synchronized de la lista
+        v.setEstado(EstadoVehiculo.ESTACIONADO);
+        //--------------------------------------------------------------------------------
     }
 
     public void liberar(){
+        //--------------------------------------------------------------------------------
+        // El vehículo que sale vuelve a quedar FUERA
+        if(vehiculo != null){
+            vehiculo.setEstado(EstadoVehiculo.FUERA);
+        }
+        //--------------------------------------------------------------------------------
         this.vehiculo = null;
     }
 }

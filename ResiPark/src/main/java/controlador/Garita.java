@@ -1,17 +1,26 @@
 package controlador;
 
-import modelo.ColaEntrada;
+// Antes:
+// import modelo.ColaEntrada;
+import modelo.Cola;
 import modelo.Espacio;
+//--------------------------------------------------------------------------------
+import modelo.EstadoVehiculo;
+//--------------------------------------------------------------------------------
 import modelo.Parqueo;
 import modelo.Vehiculo;
 
 public class Garita extends Thread{
     private int numero;
-    private ColaEntrada cola;
+    // Antes:
+    // private ColaEntrada cola;
+    private Cola cola;
     private Parqueo parqueo;
     private ControladorEntrada controlador;
 
-    public Garita(int numero, ColaEntrada cola, Parqueo parqueo, ControladorEntrada controlador){
+    // Antes:
+    // public Garita(int numero, ColaEntrada cola, Parqueo parqueo, ControladorEntrada controlador){
+    public Garita(int numero, Cola cola, Parqueo parqueo, ControladorEntrada controlador){
         this.numero = numero;
         this.cola = cola;
         this.parqueo = parqueo;
@@ -19,7 +28,7 @@ public class Garita extends Thread{
         setDaemon(true);
     }
 
-    @Override 
+    @Override
     public void run(){
         while(true){
             Vehiculo v = cola.desencolar();
@@ -37,6 +46,10 @@ public class Garita extends Thread{
 
             Espacio espacio = parqueo.asignar(v);
             if(espacio == null){
+                //--------------------------------------------------------------------------------
+                // Rechazado: no se queda esperando en la cola, vuelve a FUERA
+                v.setEstado(EstadoVehiculo.FUERA);
+                //--------------------------------------------------------------------------------
                 controlador.actualizarGarita(numero, "RECHAZADO "+v.getPlaca() + " (sin espacio)");
             } else {
                 controlador.actualizarEspacio(espacio);

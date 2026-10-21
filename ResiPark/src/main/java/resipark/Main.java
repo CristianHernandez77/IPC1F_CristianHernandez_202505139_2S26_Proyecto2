@@ -1,12 +1,11 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- */
+
 
 package resipark;
 
 import javax.swing.SwingUtilities;
 
 import controlador.ControladorEntrada;
+import controlador.ControladorSalida;
 import vista.VentanaPrincipal;
 
 public class Main {
@@ -15,6 +14,10 @@ public class Main {
             VentanaPrincipal vista = new VentanaPrincipal();
             ControladorEntrada controlador = new ControladorEntrada(vista);
             controlador.iniciarGaritas();
+            //--------------------------------------------------------------------------------
+            ControladorSalida controladorSalida = new ControladorSalida(vista, controlador.getParqueo());
+            controladorSalida.iniciarGarita();
+            //--------------------------------------------------------------------------------
             vista.setVisible(true);
         });
     }

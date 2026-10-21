@@ -16,6 +16,13 @@ public class VentanaPrincipal extends JFrame {
     private JLabel lblGarita1;
     private JLabel lblGarita2;
     private JPanel panelParqueo;
+    //--------------------------------------------------------------------------------
+    // Componentes de la salida
+    private JComboBox<String> cmbEstacionados;
+    private JButton btnSalida;
+    private JTextArea areaColaSalida;
+    private JLabel lblGaritaSalida;
+    //--------------------------------------------------------------------------------
 
     // Arreglo simple con las 150 etiquetas, para buscarlas por id
     private JLabel[] etiquetas = new JLabel[150];
@@ -23,7 +30,8 @@ public class VentanaPrincipal extends JFrame {
 
     public VentanaPrincipal() {
         setTitle("Ejemplo 2: Parqueo con listas circulares");
-        setSize(1300, 650);
+        //setSize(1300, 650);
+        setSize(1700,650);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLayout(new BorderLayout(10, 10));
 
@@ -51,14 +59,43 @@ public class VentanaPrincipal extends JFrame {
         JScrollPane scroll = new JScrollPane(areaCola);
         scroll.setBorder(BorderFactory.createTitledBorder("Cola de entrada"));
         scroll.setPreferredSize(new Dimension(180, 0));
-        add(scroll, BorderLayout.EAST);
+        // Antes:
+        // add(scroll, BorderLayout.EAST);
+        //--------------------------------------------------------------------------------
+        // La cola de salida va debajo de la cola de entrada
+        areaColaSalida = new JTextArea();
+        areaColaSalida.setEditable(false);
+        JScrollPane scrollSalida = new JScrollPane(areaColaSalida);
+        scrollSalida.setBorder(BorderFactory.createTitledBorder("Cola de salida"));
+
+        JPanel panelEste = new JPanel(new GridLayout(2, 1, 0, 5));
+        panelEste.setPreferredSize(new Dimension(180, 0));
+        panelEste.add(scroll);
+        panelEste.add(scrollSalida);
+        add(panelEste, BorderLayout.EAST);
+        //--------------------------------------------------------------------------------
 
         // Sur: estado de las garitas
-        JPanel panelSur = new JPanel(new GridLayout(2, 1));
+        // Antes:
+        // JPanel panelSur = new JPanel(new GridLayout(2, 1));
+        JPanel panelSur = new JPanel(new GridLayout(3, 1));
         lblGarita1 = new JLabel("Garita 1: Libre");
         lblGarita2 = new JLabel("Garita 2: Libre");
         panelSur.add(lblGarita1);
         panelSur.add(lblGarita2);
+        //--------------------------------------------------------------------------------
+        // Fila de salida: elegir un vehículo estacionado y ver la garita de salida
+        JPanel panelSalida = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        panelSalida.add(new JLabel("Estacionados:"));
+        cmbEstacionados = new JComboBox<>();
+        cmbEstacionados.setPreferredSize(new Dimension(120, 25));
+        panelSalida.add(cmbEstacionados);
+        btnSalida = new JButton("Solicitar salida");
+        panelSalida.add(btnSalida);
+        lblGaritaSalida = new JLabel("Garita de salida: Libre");
+        panelSalida.add(lblGaritaSalida);
+        panelSur.add(panelSalida);
+        //--------------------------------------------------------------------------------
         add(panelSur, BorderLayout.SOUTH);
     }
 
@@ -96,6 +133,16 @@ public class VentanaPrincipal extends JFrame {
         }
     }
 
+    //Panel ocupacion en vivo, a la izquierda de la ventana
+    public void agregarPanelOcupacion(ConsultaOcupacion fuente){
+
+        PanelOcupacion panel = new PanelOcupacion(fuente);
+        panel.setPreferredSize(new Dimension(380,0));
+
+        add(panel,BorderLayout.WEST);
+
+    }
+
     public void setAccionEnviar(ActionListener accion) {
         btnEnviar.addActionListener(accion);
         txtPlaca.addActionListener(accion);
@@ -128,6 +175,37 @@ public class VentanaPrincipal extends JFrame {
             lblGarita2.setText("Garita 2: " + texto);
         }
     }
+
+    //--------------------------------------------------------------------------------
+    public void setAccionSalida(ActionListener accion) {
+        btnSalida.addActionListener(accion);
+    }
+
+    // Placa seleccionada en la lista de estacionados (null si no hay ninguna)
+    public String getPlacaSalida() {
+        return (String) cmbEstacionados.getSelectedItem();
+    }
+
+    // Vuelve a llenar la lista sin perder la selección del usuario
+    public void mostrarEstacionados(String[] placas) {
+        Object seleccionado = cmbEstacionados.getSelectedItem();
+        cmbEstacionados.removeAllItems();
+        for (int i = 0; i < placas.length; i++) {
+            cmbEstacionados.addItem(placas[i]);
+        }
+        if (seleccionado != null) {
+            cmbEstacionados.setSelectedItem(seleccionado);
+        }
+    }
+
+    public void mostrarColaSalida(String texto) {
+        areaColaSalida.setText(texto);
+    }
+
+    public void mostrarGaritaSalida(String texto) {
+        lblGaritaSalida.setText("Garita de salida: " + texto);
+    }
+    //--------------------------------------------------------------------------------
 
     public void mostrarMensaje(String mensaje) {
         JOptionPane.showMessageDialog(this, mensaje);

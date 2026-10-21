@@ -64,4 +64,95 @@ public class ListaCircularEspacios {
         } while(actual != primero);
         return ids;
     }
+
+    // Cuenta los espacios de una fila recorriendo la lista una sola vuelta.
+    // Si los soloOcupados es true  uenta únicamente los ocupuados; si es false, todos
+    // Es synchronized porque las garitas modifican la lista desde otros hilos
+    public synchronized int contar(char fila, boolean soloOcupados){
+        if(primero == null ){
+            return 0;
+        }
+
+        int cantidad = 0;
+        Espacio actual = primero;
+        do {
+            if(actual.getId().charAt(0) == fila && (!soloOcupados || !actual.isLibre())){
+                cantidad ++;
+            }
+            actual = actual.siguiente;
+        }while(actual != primero);
+        return cantidad;
+    }
+
+    //--------------------------------------------------------------------------------
+    // Busca el espacio donde está el vehículo y lo libera. Recorre la lista una sola vuelta.
+    // Es synchronized con el MISMO candado que asignar(): una garita de entrada y la de
+    // salida nunca modifican esta lista al mismo tiempo.
+    public synchronized Espacio liberar(Vehiculo v){
+        if(primero == null){
+            return null;
+        }
+
+        Espacio actual = primero;
+        do {
+            if(actual.getVehiculo() == v){
+                actual.liberar();
+                return actual;
+            }
+            actual = actual.siguiente;
+        } while(actual != primero);
+        return null;
+    }
+
+    // Busca un vehículo estacionado por su placa (null si no está en esta lista)
+    public synchronized Vehiculo buscarPorPlaca(String placa){
+        if(primero == null){
+            return null;
+        }
+
+        Espacio actual = primero;
+        do {
+            if(!actual.isLibre() && actual.getVehiculo().getPlaca().equals(placa)){
+                return actual.getVehiculo();
+            }
+            actual = actual.siguiente;
+        } while(actual != primero);
+        return null;
+    }
+
+    // Placas de los vehículos que pueden pedir salida (estado ESTACIONADO).
+    // Igual que getIds(), el arreglo solo sirve para entregarle los datos a la vista.
+    // Primera vuelta: contar. Segunda vuelta: llenar el arreglo.
+    public synchronized String[] getPlacasEstacionadas(){
+        if(primero == null){
+            return new String[0];
+        }
+
+        int cantidad = 0;
+        Espacio actual = primero;
+        do {
+            if(estaEstacionado(actual)){
+                cantidad++;
+            }
+            actual = actual.siguiente;
+        } while(actual != primero);
+
+        String[] placas = new String[cantidad];
+        int i = 0;
+        actual = primero;
+        do {
+            if(estaEstacionado(actual)){
+                placas[i] = actual.getVehiculo().getPlaca();
+                i++;
+            }
+            actual = actual.siguiente;
+        } while(actual != primero);
+        return placas;
+    }
+
+    // Un vehículo en EN_COLA_SALIDA sigue ocupando su espacio, pero ya no puede pedir salida otra vez
+    private boolean estaEstacionado(Espacio espacio){
+        return !espacio.isLibre() && espacio.getVehiculo().getEstado() == EstadoVehiculo.ESTACIONADO;
+    }
+    //--------------------------------------------------------------------------------
 }

@@ -1,11 +1,15 @@
 package modelo;
 
-public class ColaEntrada {
+// Antes:
+// public class ColaEntrada {
+public class Cola {
     private Nodo frente;
     private Nodo ultimo;
     private int tamano;
 
-    public ColaEntrada(){
+    // Antes:
+    // public ColaEntrada(){
+    public Cola(){
         frente = null;
         ultimo = null;
         tamano = 0;

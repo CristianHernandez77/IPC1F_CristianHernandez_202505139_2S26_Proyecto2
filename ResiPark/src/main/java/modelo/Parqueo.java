@@ -41,4 +41,50 @@ public class Parqueo {
     public String[] getIdsGeneral(){
         return general.getIds();
     }
+
+    //Elegir la lista según la letra : A-C es el área de socios, el resto es general
+    public int contarEnFila(char fila, boolean soloOcupados){
+        if(fila >='A' && fila <= 'C'){
+            return socios.contar(fila, soloOcupados);
+        }
+        return general.contar(fila, soloOcupados);
+    }
+
+    //--------------------------------------------------------------------------------
+    // Libera el espacio del vehículo. Un socio pudo quedar en el área general
+    // (si la de socios estaba llena), por eso se busca igual que en asignar().
+    public Espacio liberar(Vehiculo v){
+        if(v.isSocio()){
+            Espacio espacio = socios.liberar(v);
+            if(espacio != null){
+                return espacio;
+            }
+        }
+        return general.liberar(v);
+    }
+
+    // Busca en las dos áreas el vehículo estacionado con esa placa
+    public Vehiculo buscarVehiculo(String placa){
+        Vehiculo v = socios.buscarPorPlaca(placa);
+        if(v != null){
+            return v;
+        }
+        return general.buscarPorPlaca(placa);
+    }
+
+    // Junta las placas de las dos áreas en un solo arreglo para la vista
+    public String[] getPlacasEstacionadas(){
+        String[] deSocios = socios.getPlacasEstacionadas();
+        String[] deGeneral = general.getPlacasEstacionadas();
+
+        String[] todas = new String[deSocios.length + deGeneral.length];
+        for(int i = 0; i < deSocios.length; i++){
+            todas[i] = deSocios[i];
+        }
+        for(int j = 0; j < deGeneral.length; j++){
+            todas[deSocios.length + j] = deGeneral[j];
+        }
+        return todas;
+    }
+    //--------------------------------------------------------------------------------
 }

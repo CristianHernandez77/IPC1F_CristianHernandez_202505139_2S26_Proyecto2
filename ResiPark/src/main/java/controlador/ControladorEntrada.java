@@ -69,7 +69,7 @@ public class ControladorEntrada {
         // cola.encolar(new Vehiculo(placa, vista.isSocio()));
         //--------------------------------------------------------------------------------
         // El estado se cambia ANTES de encolar: una garita podría tomarlo en cuanto entra
-        Vehiculo v = new Vehiculo(placa, vista.isSocio());
+        Vehiculo v = new Vehiculo(placa, "Desconocida", "Desconocido", "N/A", "Automóvil");
         v.setEstado(EstadoVehiculo.EN_COLA_ENTRADA);
         cola.encolar(v);
         //--------------------------------------------------------------------------------
@@ -112,7 +112,7 @@ public class ControladorEntrada {
             // Antes:
             // cola.encolar(new Vehiculo("T" + contadorPrueba, vista.isSocio()));
             //--------------------------------------------------------------------------------
-            Vehiculo v = new Vehiculo("T" + contadorPrueba, vista.isSocio());
+           Vehiculo v = new Vehiculo("T" + contadorPrueba, "Desconocida", "Desconocido", "N/A", "Automóvil");
             v.setEstado(EstadoVehiculo.EN_COLA_ENTRADA);
             cola.encolar(v);
             //--------------------------------------------------------------------------------

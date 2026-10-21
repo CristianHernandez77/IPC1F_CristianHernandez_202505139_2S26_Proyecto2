@@ -2,51 +2,72 @@ package modelo;
 
 public class Vehiculo {
     private String placa;
+    private String marca;
+    private String modelo;
+    private String color;
+    private String tipo; // "Automóvil", "Motocicleta", "Pickup"
+    private String idResidente; // Para saber a quién pertenece (null si es visitante)
     private boolean socio;
-    //--------------------------------------------------------------------------------
     private EstadoVehiculo estado;
-    //--------------------------------------------------------------------------------
 
-    public Vehiculo(String placa, boolean socio){
+    // Constructor para vehículos de residentes
+    public Vehiculo(String placa, String marca, String modelo, String color, String tipo, String idResidente, boolean socio) {
         this.placa = placa;
+        this.marca = marca;
+        this.modelo = modelo;
+        this.color = color;
+        this.tipo = tipo;
+        this.idResidente = idResidente;
         this.socio = socio;
-        //--------------------------------------------------------------------------------
-        // Todo vehículo empieza fuera del residencial
         this.estado = EstadoVehiculo.FUERA;
-        //--------------------------------------------------------------------------------
     }
 
-    public String getPlaca() {
-        return placa;
+    // Constructor para visitantes (no tienen ID de residente, se les asigna null)
+    public Vehiculo(String placa, String marca, String modelo, String color, String tipo) {
+        this(placa, marca, modelo, color, tipo, null, false);
     }
 
-    public void setPlaca(String placa) {
-        this.placa = placa;
-    }
+    // Getters y Setters
+    public String getPlaca() { return placa; }
+    public void setPlaca(String placa) { this.placa = placa; }
 
-    public boolean isSocio(){
-        return socio;
-    }
+    public String getMarca() { return marca; }
+    public void setMarca(String marca) { this.marca = marca; }
 
-    //--------------------------------------------------------------------------------
-    // synchronized: el estado lo cambian las garitas (sus hilos) y la interfaz (hilo de Swing)
-    public synchronized EstadoVehiculo getEstado(){
+    public String getModelo() { return modelo; }
+    public void setModelo(String modelo) { this.modelo = modelo; }
+
+    public String getColor() { return color; }
+    public void setColor(String color) { this.color = color; }
+
+    public String getTipo() { return tipo; }
+    public void setTipo(String tipo) { this.tipo = tipo; }
+
+    public String getIdResidente() { return idResidente; }
+    public void setIdResidente(String idResidente) { this.idResidente = idResidente; }
+
+    public boolean isSocio() { return socio; }
+    public void setSocio(boolean socio) { this.socio = socio; }
+
+    // --- Lógica de Estados (synchronized) ---
+    public synchronized EstadoVehiculo getEstado() {
         return estado;
     }
 
-    public synchronized void setEstado(EstadoVehiculo estado){
+    public synchronized void setEstado(EstadoVehiculo estado) {
         this.estado = estado;
     }
 
-    // Cambia el estado SOLO si el estado actual es el esperado.
-    // Revisar y cambiar en un mismo método synchronized evita que dos acciones
-    // vean "ESTACIONADO" al mismo tiempo y las dos lo manden a la cola de salida.
-    public synchronized boolean cambiarEstado(EstadoVehiculo esperado, EstadoVehiculo nuevo){
-        if(estado != esperado){
+    public synchronized boolean cambiarEstado(EstadoVehiculo esperado, EstadoVehiculo nuevo) {
+        if (estado != esperado) {
             return false;
         }
         estado = nuevo;
         return true;
     }
-    //--------------------------------------------------------------------------------
+
+    @Override
+    public String toString() {
+        return placa + " - " + marca + " " + modelo + " (" + color + ")";
+    }
 }

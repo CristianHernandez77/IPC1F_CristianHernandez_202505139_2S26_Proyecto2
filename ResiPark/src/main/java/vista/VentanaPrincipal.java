@@ -47,6 +47,12 @@ public class VentanaPrincipal extends JFrame {
         btnPrueba = new JButton("Enviar 10 de prueba");
         panelNorte.add(btnPrueba);
         add(panelNorte, BorderLayout.NORTH);
+            JButton btnResidentes = new JButton("Gestionar Residentes");
+            btnResidentes.addActionListener(e -> {
+            VentanaResidentes vr = new VentanaResidentes();
+            vr.setVisible(true);
+        });
+        panelNorte.add(btnResidentes);
 
         // Centro: el parqueo (el controlador agrega las áreas)
         panelParqueo = new JPanel();
@@ -97,6 +103,7 @@ public class VentanaPrincipal extends JFrame {
         panelSur.add(panelSalida);
         //--------------------------------------------------------------------------------
         add(panelSur, BorderLayout.SOUTH);
+
     }
 
     // Dibuja un área del parqueo como cuadrícula: una etiqueta por espacio

@@ -8,8 +8,10 @@ import modelo.Cola;
 import modelo.Espacio;
 //--------------------------------------------------------------------------------
 import modelo.EstadoVehiculo;
+import modelo.Evento;
 //--------------------------------------------------------------------------------
 import modelo.Parqueo;
+import modelo.Pila;
 import modelo.Vehiculo;
 //------------
 import vista.ConsultaOcupacion;
@@ -22,15 +24,16 @@ public class ControladorEntrada {
     private Cola cola;
     private Parqueo parqueo;
     private VentanaPrincipal vista;
+    private Pila historialEventos;
     private int contadorPrueba = 1;
 
-    public ControladorEntrada(VentanaPrincipal vista){
+    public ControladorEntrada(VentanaPrincipal vista, Pila hostorial){
         this.vista = vista;
         // Antes:
         // this.cola = new ColaEntrada();
         this.cola = new Cola();
         this.parqueo = new Parqueo();
-
+        this.historialEventos = Pila.global;
         //------------
         // antes: vista.construirArea("Socios (A-C(", parqueo.getIdsSocios(), 25);
         vista.construirArea("Socios (A-C)", parqueo.getIdsSocios(), 25);
@@ -69,10 +72,12 @@ public class ControladorEntrada {
         // cola.encolar(new Vehiculo(placa, vista.isSocio()));
         //--------------------------------------------------------------------------------
         // El estado se cambia ANTES de encolar: una garita podría tomarlo en cuanto entra
-        Vehiculo v = new Vehiculo(placa, "Desconocida", "Desconocido", "N/A", "Automóvil");
+        Vehiculo v = new Vehiculo(placa, "Marca", "Modelo", "Color", "Automóvil");
         v.setEstado(EstadoVehiculo.EN_COLA_ENTRADA);
         cola.encolar(v);
         //--------------------------------------------------------------------------------
+        // registrar evento
+        historialEventos.push(new Evento("VEHICULO_EN_COLA_ENTRADA", "Placa" + placa, "Garita de Entrada"));
         vista.limpiarPlaca();
         actualizarCola();
     }
@@ -115,6 +120,8 @@ public class ControladorEntrada {
            Vehiculo v = new Vehiculo("T" + contadorPrueba, "Desconocida", "Desconocido", "N/A", "Automóvil");
             v.setEstado(EstadoVehiculo.EN_COLA_ENTRADA);
             cola.encolar(v);
+            historialEventos.push(new Evento("VEHICULO_EN_COLA_ENTRADA", "Placa T" + contadorPrueba, "Garita de entrada"));
+
             //--------------------------------------------------------------------------------
             contadorPrueba++;
         }

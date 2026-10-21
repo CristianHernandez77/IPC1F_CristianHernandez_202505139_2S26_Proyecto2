@@ -9,6 +9,8 @@ import modelo.EstadoVehiculo;
 //--------------------------------------------------------------------------------
 import modelo.Parqueo;
 import modelo.Vehiculo;
+import modelo.Pila;
+import modelo.Evento;
 
 public class Garita extends Thread{
     private int numero;
@@ -51,9 +53,11 @@ public class Garita extends Thread{
                 v.setEstado(EstadoVehiculo.FUERA);
                 //--------------------------------------------------------------------------------
                 controlador.actualizarGarita(numero, "RECHAZADO "+v.getPlaca() + " (sin espacio)");
+                Pila.global.push(new Evento("VEHICULO_RECHAZADO", "Placa " + v.getPlaca() + " (Sin espacio)", "Garita " + numero));
             } else {
                 controlador.actualizarEspacio(espacio);
                 controlador.actualizarGarita(numero, v.getPlaca() + " -> " + espacio.getId());
+                                Pila.global.push(new Evento("VEHICULO_ASIGNADO", "Placa " + v.getPlaca() + " -> " + espacio.getId(), "Garita " + numero));
             }
 
             //controlador.actualizarGarita(numero, "libre");

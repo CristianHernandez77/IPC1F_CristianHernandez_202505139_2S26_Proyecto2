@@ -5,7 +5,9 @@ import javax.swing.SwingUtilities;
 import modelo.Cola;
 import modelo.Espacio;
 import modelo.EstadoVehiculo;
+import modelo.Evento;
 import modelo.Parqueo;
+import modelo.Pila;
 import modelo.Vehiculo;
 import vista.VentanaPrincipal;
 
@@ -63,8 +65,13 @@ public class ControladorSalida {
     }
 
     public void liberarEspacio(Espacio espacio){
-        String id = espacio.getId();
-        SwingUtilities.invokeLater(() -> vista.pintarEspacio(id, null));
+        if (espacio != null) {
+             String placa = espacio.getVehiculo() != null ? espacio.getVehiculo().getPlaca() : "Desconocida";
+             Pila.global.push(new Evento("VEHICULO_SALIO", "Placa " + placa + " liberó " + espacio.getId(), "Garita Salida"));
+             String id = espacio.getId();
+            SwingUtilities.invokeLater(() -> vista.pintarEspacio(id, null));
+        }   
+        
     }
 
     public void actualizarEstacionados(){

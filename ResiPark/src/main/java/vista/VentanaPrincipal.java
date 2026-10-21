@@ -1,6 +1,9 @@
 package vista;
 
 import javax.swing.*;
+
+import modelo.Pila;
+
 import java.awt.*;
 import java.awt.event.ActionListener;
 
@@ -51,8 +54,21 @@ public class VentanaPrincipal extends JFrame {
             btnResidentes.addActionListener(e -> {
             VentanaResidentes vr = new VentanaResidentes();
             vr.setVisible(true);
-        });
-        panelNorte.add(btnResidentes);
+            });
+            panelNorte.add(btnResidentes);
+            JButton btnEventos = new JButton("Ver Eventos");
+            btnEventos.addActionListener(e -> {
+                VentanaEventos ve = new VentanaEventos(Pila.global);
+                ve.setVisible(true);
+            });
+            panelNorte.add(btnResidentes);
+            JButton btnEventos1 = new JButton("Ver Eventos");
+            btnEventos1.addActionListener(e -> {
+            VentanaEventos ve = new VentanaEventos(Pila.global);
+            ve.setVisible(true);
+            });
+            panelNorte.add(btnEventos1);
+            add(panelNorte, BorderLayout.NORTH);
 
         // Centro: el parqueo (el controlador agrega las áreas)
         panelParqueo = new JPanel();

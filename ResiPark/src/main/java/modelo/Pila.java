@@ -1,6 +1,7 @@
 package modelo;
 
 public class Pila {
+    public static Pila global = new Pila();
     private NodoEvento tope;
     private int tamano;
 

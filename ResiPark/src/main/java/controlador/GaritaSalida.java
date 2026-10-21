@@ -2,7 +2,9 @@ package controlador;
 
 import modelo.Cola;
 import modelo.Espacio;
+import modelo.Evento;
 import modelo.Parqueo;
+import modelo.Pila;
 import modelo.Vehiculo;
 
 // Hilo de la garita de salida: consume vehículos de la cola de salida
@@ -43,6 +45,7 @@ public class GaritaSalida extends Thread {
             } else {
                 controlador.liberarEspacio(espacio);
                 controlador.actualizarGarita(v.getPlaca() + " salió de " + espacio.getId());
+                Pila.global.push(new Evento("VEHICULO_SALIO", "Placa " + v.getPlaca() + " liberó " + espacio.getId(), "Garita Salida"));
             }
         }
     }

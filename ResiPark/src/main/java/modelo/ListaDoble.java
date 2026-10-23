@@ -83,4 +83,21 @@ public class ListaDoble {
     public synchronized int getTamano() {
         return tamano;
     }
+
+    // busca un vehiculo en todos los residentes
+    public synchronized Vehiculo buscarVehiculoGlobal(String placa){
+        NodoResidente actual = primero;
+        while (actual != null) {
+            Vehiculo v = actual.dato.getVehiculos().buscarPorPlaca(placa);
+            if(v != null){
+                return v; // osea que lo encontro
+            }
+            actual = actual.siguiente;
+        }
+        return null; // osea que no lo encontro
+    }
+    
+    public NodoResidente getPrimero() {
+    return primero;
+    }
 }

@@ -12,6 +12,7 @@ import modelo.Evento;
 //--------------------------------------------------------------------------------
 import modelo.Parqueo;
 import modelo.Pila;
+import modelo.Residente;
 import modelo.Vehiculo;
 //------------
 import vista.ConsultaOcupacion;
@@ -63,7 +64,7 @@ public class ControladorEntrada {
     }
 
     public void enviarVehiculo(){
-        String placa = vista.getPlaca();
+        String placa = vista.getPlaca().toUpperCase();
         if(placa.isEmpty()){
             vista.mostrarMensaje("Ingrese una placa");
             return;
@@ -72,12 +73,22 @@ public class ControladorEntrada {
         // cola.encolar(new Vehiculo(placa, vista.isSocio()));
         //--------------------------------------------------------------------------------
         // El estado se cambia ANTES de encolar: una garita podría tomarlo en cuanto entra
-        Vehiculo v = new Vehiculo(placa, "Marca", "Modelo", "Color", "Automóvil");
+        Vehiculo v = Administrador.getInstance().getListaResidentes().buscarVehiculoGlobal(placa);
+        
+        if(v == null){
+            vista.mostrarMensaje("ERROR: La placa " + placa + " no pertenece a ningún residente registrado");
+            return;
+        }
+
+        if(v.getEstado() != EstadoVehiculo.FUERA){
+            vista.mostrarMensaje("ERROR: EL VEHICULO "+ placa + " ya esta dentro o en una cola");
+            return;
+        }
         v.setEstado(EstadoVehiculo.EN_COLA_ENTRADA);
         cola.encolar(v);
         //--------------------------------------------------------------------------------
         // registrar evento
-        historialEventos.push(new Evento("VEHICULO_EN_COLA_ENTRADA", "Placa" + placa, "Garita de Entrada"));
+        Pila.global.push(new Evento("VEHICULO_EN_COLA_ENTRADA", "Placa" + placa, "Garita de Entrada"));
         vista.limpiarPlaca();
         actualizarCola();
     }
@@ -114,19 +125,24 @@ public class ControladorEntrada {
 
     private void enviarPrueba(){
         for(int i = 0; i < 10; i++){
-            // Antes:
-            // cola.encolar(new Vehiculo("T" + contadorPrueba, vista.isSocio()));
-            //--------------------------------------------------------------------------------
-           Vehiculo v = new Vehiculo("T" + contadorPrueba, "Desconocida", "Desconocido", "N/A", "Automóvil");
+            int numResidente = (contadorPrueba / 3) + 1; 
+            String idResidente = "PRUEBA" + numResidente;
+            Residente r = Administrador.getInstance().getListaResidentes().buscarPorId(idResidente);
+            if (r == null) {
+                r = new Residente(idResidente, "Residente Prueba " + numResidente, "Casa P" + numResidente, true);
+                Administrador.getInstance().getListaResidentes().agregar(r);
+            }
+
+            String placaPrueba = "T" + contadorPrueba;
+            Vehiculo v = new Vehiculo(placaPrueba, "Marca", "Modelo", "Color", "Automóvil", idResidente, true);
+            r.getVehiculos().agregar(v);
             v.setEstado(EstadoVehiculo.EN_COLA_ENTRADA);
             cola.encolar(v);
-            historialEventos.push(new Evento("VEHICULO_EN_COLA_ENTRADA", "Placa T" + contadorPrueba, "Garita de entrada"));
-
-            //--------------------------------------------------------------------------------
+            Pila.global.push(new Evento("VEHICULO_EN_COLA_ENTRADA", "Placa " + placaPrueba, "Garita de Entrada"));
+            
             contadorPrueba++;
         }
-        //------------
         actualizarCola();
-        //------------
     }
 }
+

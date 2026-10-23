@@ -7,7 +7,7 @@ public class ControladorResidentes {
     private Residente residenteActual; // Para saber a quién le estamos agregando vehículos
 
     public ControladorResidentes() {
-        this.listaResidentes = new ListaDoble();
+        this.listaResidentes = Administrador.getInstance().getListaResidentes();
         this.residenteActual = null;
     }
 

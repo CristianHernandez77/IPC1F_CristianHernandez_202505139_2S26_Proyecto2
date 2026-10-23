@@ -3,6 +3,7 @@ package controlador;
 import modelo.ListaDoble;
 import modelo.Vehiculo;
 import modelo.Residente;
+import persistencia.Archivo;
 
 public class Administrador {
     private static Administrador instancia;
@@ -25,6 +26,10 @@ public class Administrador {
 
     public Vehiculo buscarVehiculoGlobal(String placa){
         return null;
+    }
+
+    public void guardarDatos() {
+        Archivo.guardarTodo(listaResidentes);
     }
 }
 

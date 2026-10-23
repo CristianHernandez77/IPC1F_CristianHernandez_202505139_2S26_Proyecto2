@@ -76,4 +76,8 @@ public class ListaSimple {
     public synchronized int getTamano() {
         return tamano;
     }
+
+    public NodoVehiculo getPrimero() {
+    return primero;
+    }
 }

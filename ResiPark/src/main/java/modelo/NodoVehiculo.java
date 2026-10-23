@@ -1,8 +1,8 @@
 package modelo;
 
 public class NodoVehiculo {
-    Vehiculo dato;
-    NodoVehiculo siguiente;
+    public Vehiculo dato;
+    public NodoVehiculo siguiente;
 
     public NodoVehiculo(Vehiculo dato) {
         this.dato = dato;

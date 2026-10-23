@@ -29,7 +29,9 @@ public class VentanaEventos extends JFrame{
     }
 
         private void actualizarVista() {
-        areaEventos.setText(historial.listarInverso());
+        if (historial != null) {
+            areaEventos.setText(historial.listarInverso());
+        }
     }
         public void detener() {
         temporizador.stop();

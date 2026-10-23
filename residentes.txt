@@ -1,0 +1,6 @@
+PRUEBA1|Residente Prueba 1|Casa P1|S
+PRUEBA2|Residente Prueba 2|Casa P2|S
+PRUEBA3|Residente Prueba 3|Casa P3|S
+PRUEBA4|Residente Prueba 4|Casa P4|S
+67|criis|casa 1|S
+64|nose|casa 2|N

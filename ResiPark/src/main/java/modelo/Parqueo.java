@@ -86,5 +86,73 @@ public class Parqueo {
         }
         return todas;
     }
+
+    public synchronized Espacio buscarEspacio(String id) {
+        Espacio espacio = socios.buscarPorId(id);
+
+        if (espacio != null) {
+            return espacio;
+        }
+
+        return general.buscarPorId(id);
+    }
+
+    public synchronized boolean restaurarVehiculo(
+            Vehiculo vehiculo,
+            String idEspacio,
+            EstadoVehiculo estado
+    ) {
+        Espacio espacio = buscarEspacio(idEspacio);
+
+        if (espacio == null || !espacio.isLibre()) {
+            return false;
+        }
+
+        espacio.ocupar(vehiculo);
+        vehiculo.setEstado(estado);
+
+        return true;
+    }
+
+    public synchronized String obtenerOcupacion() {
+        return socios.obtenerOcupacion()
+                + general.obtenerOcupacion();
+    }
+
+    public synchronized Espacio buscarEspacioDeVehiculo(
+            Vehiculo vehiculo
+    ) {
+        Espacio espacio =
+                socios.buscarEspacioDeVehiculo(vehiculo);
+
+        if (espacio != null) {
+            return espacio;
+        }
+
+        return general.buscarEspacioDeVehiculo(vehiculo);
+    }
+
+    public synchronized String[] getPlacasOcupadas() {
+        String[] placasSocios =
+                socios.getPlacasOcupadas();
+
+        String[] placasGeneral =
+                general.getPlacasOcupadas();
+
+        String[] todas = new String[
+                placasSocios.length + placasGeneral.length
+        ];
+
+        for (int i = 0; i < placasSocios.length; i++) {
+            todas[i] = placasSocios[i];
+        }
+
+        for (int i = 0; i < placasGeneral.length; i++) {
+            todas[placasSocios.length + i] =
+                    placasGeneral[i];
+        }
+
+        return todas;
+    }
     //--------------------------------------------------------------------------------
 }

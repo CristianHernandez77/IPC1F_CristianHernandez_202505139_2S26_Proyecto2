@@ -1,0 +1,12 @@
+T1|Marca|Modelo|Color|Automóvil|PRUEBA1
+T2|Marca|Modelo|Color|Automóvil|PRUEBA1
+T3|Marca|Modelo|Color|Automóvil|PRUEBA2
+T4|Marca|Modelo|Color|Automóvil|PRUEBA2
+T5|Marca|Modelo|Color|Automóvil|PRUEBA2
+T6|Marca|Modelo|Color|Automóvil|PRUEBA3
+T7|Marca|Modelo|Color|Automóvil|PRUEBA3
+T8|Marca|Modelo|Color|Automóvil|PRUEBA3
+T9|Marca|Modelo|Color|Automóvil|PRUEBA4
+T10|Marca|Modelo|Color|Automóvil|PRUEBA4
+P234BLK|MACH|BEY|AZUL|Pickup|67
+P324VLL|ma|ty|rojo|Pickup|64

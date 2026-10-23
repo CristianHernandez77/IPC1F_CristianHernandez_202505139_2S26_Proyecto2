@@ -1,41 +1,56 @@
-
-
 package resipark;
-
-import javax.swing.JFrame;
-import javax.swing.SwingUtilities;
 
 import controlador.Administrador;
 import controlador.ControladorEntrada;
 import controlador.ControladorSalida;
-import vista.VentanaPrincipal;
 import modelo.Pila;
-//import vista.VentanaEventos;
-import java.awt.event.WindowAdapter; 
+import vista.VentanaPrincipal;
+
+import javax.swing.JFrame;
+import javax.swing.SwingUtilities;
+import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+
 public class Main {
-    public static void main(String[] args){
-        SwingUtilities.invokeLater(()->{
-            Pila historial = new Pila();
-            VentanaPrincipal vista = new VentanaPrincipal();
-            ControladorEntrada controladorEntrada = new ControladorEntrada(vista, historial);
+
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(() -> {
+
+            // Carga los datos antes de iniciar la interfaz
+            Administrador administrador =
+                    Administrador.getInstance();
+
+            Pila historial = Pila.global;
+
+            VentanaPrincipal vista =
+                    new VentanaPrincipal();
+
+            ControladorEntrada controladorEntrada =
+                    new ControladorEntrada(vista, Pila.global);
+            controladorEntrada.restaurarOcupacion();
             controladorEntrada.iniciarGaritas();
-            //--------------------------------------------------------------------------------
-            ControladorSalida controladorSalida = new ControladorSalida(vista, controladorEntrada.getParqueo());
+
+            ControladorSalida controladorSalida =
+                    new ControladorSalida(
+                            vista,
+                            controladorEntrada.getParqueo()
+                    );
+
             controladorSalida.iniciarGarita();
-            //--------------------------------------------------------------------------------
-            vista.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+
+            vista.setDefaultCloseOperation(
+                    JFrame.DO_NOTHING_ON_CLOSE
+            );
+
             vista.addWindowListener(new WindowAdapter() {
                 @Override
                 public void windowClosing(WindowEvent e) {
-                    // Guardamos todos los datos antes de salir
-                    Administrador.getInstance().guardarDatos();
-                    System.out.println("Datos guardados. Cerrando programa...");
+                    Administrador.getInstance().guardarDatos(controladorEntrada.getParqueo());;             
                     System.exit(0);
                 }
             });
-            vista.setVisible(true);
 
+            vista.setVisible(true);
         });
     }
 }

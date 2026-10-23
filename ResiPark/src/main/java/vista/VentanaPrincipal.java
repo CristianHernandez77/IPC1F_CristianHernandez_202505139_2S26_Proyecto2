@@ -49,7 +49,6 @@ public class VentanaPrincipal extends JFrame {
         panelNorte.add(btnEnviar);
         btnPrueba = new JButton("Enviar 10 de prueba");
         panelNorte.add(btnPrueba);
-        add(panelNorte, BorderLayout.NORTH);
             JButton btnResidentes = new JButton("Gestionar Residentes");
             btnResidentes.addActionListener(e -> {
             VentanaResidentes vr = new VentanaResidentes();
@@ -58,16 +57,10 @@ public class VentanaPrincipal extends JFrame {
             panelNorte.add(btnResidentes);
             JButton btnEventos = new JButton("Ver Eventos");
             btnEventos.addActionListener(e -> {
-                VentanaEventos ve = new VentanaEventos(Pila.global);
-                ve.setVisible(true);
+                VentanaEventos ventanaEventos = new VentanaEventos(Pila.global);
+                ventanaEventos.setVisible(true);
             });
-            panelNorte.add(btnResidentes);
-            JButton btnEventos1 = new JButton("Ver Eventos");
-            btnEventos1.addActionListener(e -> {
-            VentanaEventos ve = new VentanaEventos(Pila.global);
-            ve.setVisible(true);
-            });
-            panelNorte.add(btnEventos1);
+            panelNorte.add(btnEventos);
             add(panelNorte, BorderLayout.NORTH);
 
         // Centro: el parqueo (el controlador agrega las áreas)

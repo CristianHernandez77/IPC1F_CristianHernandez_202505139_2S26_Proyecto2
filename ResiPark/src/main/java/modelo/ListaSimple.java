@@ -80,4 +80,18 @@ public class ListaSimple {
     public NodoVehiculo getPrimero() {
     return primero;
     }
+
+    public synchronized boolean todosEstanFuera() {
+    NodoVehiculo actual = primero;
+
+    while (actual != null) {
+        if (actual.dato.getEstado() != EstadoVehiculo.FUERA) {
+            return false;
+        }
+
+        actual = actual.siguiente;
+    }
+
+    return true;
+    }
 }

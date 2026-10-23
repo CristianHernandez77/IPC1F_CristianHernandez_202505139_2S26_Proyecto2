@@ -155,4 +155,101 @@ public class ListaCircularEspacios {
         return !espacio.isLibre() && espacio.getVehiculo().getEstado() == EstadoVehiculo.ESTACIONADO;
     }
     //--------------------------------------------------------------------------------
+    public synchronized Espacio buscarPorId(String id) {
+    if (primero == null) {
+        return null;
+    }
+
+    Espacio actual = primero;
+
+    do {
+        if (actual.getId().equalsIgnoreCase(id)) {
+            return actual;
+        }
+
+        actual = actual.siguiente;
+    } while (actual != primero);
+
+    return null;
+    }
+
+    public synchronized String obtenerOcupacion() {
+    String texto = "";
+
+    if (primero == null) {
+        return texto;
+    }
+
+    Espacio actual = primero;
+
+    do {
+        if (!actual.isLibre()) {
+            Vehiculo vehiculo = actual.getVehiculo();
+            EstadoVehiculo estado = vehiculo.getEstado();
+             if (estado == EstadoVehiculo.ESTACIONADO ||
+                estado == EstadoVehiculo.EN_COLA_SALIDA) {
+
+                texto += vehiculo.getPlaca() + "|" +
+                         estado.name() + "|" +
+                         actual.getId() + "\n";
+            }
+        }
+
+        actual = actual.siguiente;
+    } while (actual != primero);
+
+    return texto;
+    }
+
+    public synchronized Espacio buscarEspacioDeVehiculo(
+        Vehiculo vehiculo
+) {
+    if (primero == null) {
+        return null;
+    }
+
+    Espacio actual = primero;
+
+    do {
+        if (actual.getVehiculo() == vehiculo) {
+            return actual;
+        }
+
+        actual = actual.siguiente;
+    } while (actual != primero);
+
+    return null;
+    }
+
+    public synchronized String[] getPlacasOcupadas() {
+    if (primero == null) {
+        return new String[0];
+    }
+
+    int cantidad = 0;
+    Espacio actual = primero;
+
+    do {
+        if (!actual.isLibre()) {
+            cantidad++;
+        }
+
+        actual = actual.siguiente;
+    } while (actual != primero);
+
+    String[] placas = new String[cantidad];
+    int i = 0;
+    actual = primero;
+
+    do {
+        if (!actual.isLibre()) {
+            placas[i] = actual.getVehiculo().getPlaca();
+            i++;
+        }
+
+        actual = actual.siguiente;
+    } while (actual != primero);
+
+    return placas;
+    }
 }

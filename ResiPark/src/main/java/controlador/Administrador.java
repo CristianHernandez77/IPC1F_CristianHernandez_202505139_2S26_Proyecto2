@@ -1,35 +1,38 @@
 package controlador;
 
 import modelo.ListaDoble;
+import modelo.Parqueo;
+import modelo.Pila;
 import modelo.Vehiculo;
-import modelo.Residente;
 import persistencia.Archivo;
 
 public class Administrador {
+
     private static Administrador instancia;
     private ListaDoble listaResidentes;
 
     private Administrador() {
-        listaResidentes = new ListaDoble();
+        listaResidentes = Archivo.cargarTodo();
+        Archivo.cargarEventos(Pila.global);
     }
 
-    public static  Administrador getInstance() {
-    if (instancia == null) {
-        instancia = new Administrador();
-    }
-    return instancia;
+    public static synchronized Administrador getInstance() {
+        if (instancia == null) {
+            instancia = new Administrador();
+        }
+
+        return instancia;
     }
 
     public ListaDoble getListaResidentes() {
         return listaResidentes;
     }
 
-    public Vehiculo buscarVehiculoGlobal(String placa){
-        return null;
+    public Vehiculo buscarVehiculoGlobal(String placa) {
+        return listaResidentes.buscarVehiculoGlobal(placa);
     }
 
-    public void guardarDatos() {
-        Archivo.guardarTodo(listaResidentes);
+    public void guardarDatos(Parqueo parqueo) {
+        Archivo.guardarTodo(listaResidentes, parqueo);
     }
 }
-

@@ -14,6 +14,7 @@ import modelo.Parqueo;
 import modelo.Pila;
 import modelo.Residente;
 import modelo.Vehiculo;
+import persistencia.Archivo;
 //------------
 import vista.ConsultaOcupacion;
 //------------
@@ -28,13 +29,13 @@ public class ControladorEntrada {
     private Pila historialEventos;
     private int contadorPrueba = 1;
 
-    public ControladorEntrada(VentanaPrincipal vista, Pila hostorial){
+    public ControladorEntrada(VentanaPrincipal vista, Pila historial){
         this.vista = vista;
         // Antes:
         // this.cola = new ColaEntrada();
         this.cola = new Cola();
         this.parqueo = new Parqueo();
-        this.historialEventos = Pila.global;
+        this.historialEventos = historial;
         //------------
         // antes: vista.construirArea("Socios (A-C(", parqueo.getIdsSocios(), 25);
         vista.construirArea("Socios (A-C)", parqueo.getIdsSocios(), 25);
@@ -88,7 +89,7 @@ public class ControladorEntrada {
         cola.encolar(v);
         //--------------------------------------------------------------------------------
         // registrar evento
-        Pila.global.push(new Evento("VEHICULO_EN_COLA_ENTRADA", "Placa" + placa, "Garita de Entrada"));
+        historialEventos.push(new Evento("VEHICULO_EN_COLA_ENTRADA", "Placa" + placa, "Garita de Entrada"));
         vista.limpiarPlaca();
         actualizarCola();
     }
@@ -125,7 +126,7 @@ public class ControladorEntrada {
 
     private void enviarPrueba(){
         for(int i = 0; i < 10; i++){
-            int numResidente = (contadorPrueba / 3) + 1; 
+            int numResidente = ((contadorPrueba -1)/3) + 1; 
             String idResidente = "PRUEBA" + numResidente;
             Residente r = Administrador.getInstance().getListaResidentes().buscarPorId(idResidente);
             if (r == null) {
@@ -138,11 +139,40 @@ public class ControladorEntrada {
             r.getVehiculos().agregar(v);
             v.setEstado(EstadoVehiculo.EN_COLA_ENTRADA);
             cola.encolar(v);
-            Pila.global.push(new Evento("VEHICULO_EN_COLA_ENTRADA", "Placa " + placaPrueba, "Garita de Entrada"));
+            historialEventos.push(new Evento("VEHICULO_EN_COLA_ENTRADA", "Placa " + placaPrueba, "Garita de Entrada"));
             
             contadorPrueba++;
         }
         actualizarCola();
+    }
+
+    public void restaurarOcupacion() {
+    Archivo.cargarOcupacion(
+            parqueo,
+            Administrador.getInstance().getListaResidentes()
+    );
+
+     String[] placas = parqueo.getPlacasOcupadas();
+
+    for (int i = 0; i < placas.length; i++) {
+        Vehiculo vehiculo = parqueo.buscarVehiculo(placas[i]);
+
+        if (vehiculo != null) {
+            Espacio espacio =
+                    parqueo.buscarEspacioDeVehiculo(vehiculo);
+
+            if (espacio != null) {
+                vista.pintarEspacio(
+                        espacio.getId(),
+                        vehiculo.getPlaca()
+                );
+            }
+        }
+    }
+
+    vista.mostrarEstacionados(
+            parqueo.getPlacasEstacionadas()
+    );
     }
 }
 

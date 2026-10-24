@@ -14,6 +14,7 @@ import modelo.Parqueo;
 import modelo.Pila;
 import modelo.Residente;
 import modelo.Vehiculo;
+import modelo.Visitante;
 import persistencia.Archivo;
 //------------
 import vista.ConsultaOcupacion;
@@ -170,9 +171,95 @@ public class ControladorEntrada {
         }
     }
 
-    vista.mostrarEstacionados(
-            parqueo.getPlacasEstacionadas()
-    );
+    vista.mostrarEstacionados(parqueo.getPlacasEstacionadas());
+    }
+
+    public boolean esVisitante(Vehiculo vehiculo) {
+    return Administrador.getInstance().getListaVisitantes().contienePlaca(vehiculo.getPlaca());
+    }
+
+    public Espacio asignarVehiculo(Vehiculo vehiculo) {
+    if (esVisitante(vehiculo)) {
+        return parqueo.asignarVisitante(vehiculo);
+    }
+
+    return parqueo.asignar(vehiculo);
+    }
+
+    public void eliminarVisitante(String placa) {
+    Visitante visitante = Administrador.getInstance().getListaVisitantes().eliminarPorPlaca(placa);
+
+        if (visitante != null) {
+            historialEventos.push(new Evento("VISITANTE_RECHAZADO","Visitante con placa " + placa + " fue rechazado y descartado","Garita de Entrada"));
+        }
+    }
+    
+    public String registrarVisitante(String nombre,String placa,String idResidente) {
+    nombre = nombre.trim();
+    placa = placa.trim().toUpperCase();
+    idResidente = idResidente.trim();
+
+    if (nombre.isEmpty()|| placa.isEmpty()|| idResidente.isEmpty()) {
+        return "Complete todos los campos del visitante.";
+    }
+
+    if (nombre.contains("|")|| placa.contains("|")|| idResidente.contains("|")) {
+
+        return "Los campos no pueden contener el carácter |.";
+    }
+
+    Residente residente = Administrador.getInstance().getListaResidentes().buscarPorId(idResidente);
+
+        if (residente == null) {
+            historialEventos.push(new Evento("VISITANTE_RECHAZADO","El residente " + idResidente+ " no existe","Garita de Entrada"
+            ));
+
+            return "El residente visitado no existe.";
+        }
+
+    Administrador administrador =
+            Administrador.getInstance();
+
+        if (administrador.placaExiste(placa)) {
+            historialEventos.push(new Evento(
+                "VISITANTE_RECHAZADO","La placa " + placa+ " ya existe en el sistema","Garita de Entrada"
+            ));
+
+            return "La placa ya existe en el sistema.";
+        }
+
+    Visitante visitante = new Visitante(nombre, placa, idResidente);
+
+    boolean agregado = administrador.getListaVisitantes().agregar(visitante);
+
+    if (!agregado) {
+            return "No se pudo registrar el visitante.";
+        }
+
+        Vehiculo vehiculo = visitante.getVehiculo();
+        vehiculo.setEstado(
+            EstadoVehiculo.EN_COLA_ENTRADA
+        );
+
+        cola.encolar(vehiculo);
+
+        historialEventos.push(new Evento(
+            "VISITANTE_REGISTRADO",visitante.toString(),"Garita de Entrada"
+        ));
+
+        historialEventos.push(new Evento(
+            "VEHICULO_EN_COLA_ENTRADA","Placa " + placa + " de visitante","Garita de Entrada"
+        ));
+
+        actualizarCola();
+
+        return "Visitante enviado correctamente a la cola.";
+    }
+
+    public void registrarEvento(Evento evento) {
+    if (evento != null) {
+        historialEventos.push(evento);
+    }
     }
 }
 

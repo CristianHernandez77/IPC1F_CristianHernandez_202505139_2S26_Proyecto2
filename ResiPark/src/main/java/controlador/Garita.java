@@ -41,27 +41,28 @@ public class Garita extends Thread{
             controlador.actualizarGarita(numero, "Atendiendo: " + v.getPlaca());
 
             try{
-                Thread.sleep(5000+(int) (Math.random() * 2000));
+                Thread.sleep(1000+(int) (Math.random() * 2000));
             }catch(InterruptedException e){
                 break;
             }
 
-            Espacio espacio = parqueo.asignar(v);
+            Espacio espacio = controlador.asignarVehiculo(v);
             if(espacio == null){
                 //--------------------------------------------------------------------------------
                 // Rechazado: no se queda esperando en la cola, vuelve a FUERA
                 v.setEstado(EstadoVehiculo.FUERA);
                 //--------------------------------------------------------------------------------
-                controlador.actualizarGarita(numero, "RECHAZADO "+v.getPlaca() + " (sin espacio)");
-                Pila.global.push(new Evento("VEHICULO_RECHAZADO", "Placa " + v.getPlaca() + " (Sin espacio)", "Garita " + numero));
+                    if (controlador.esVisitante(v)) {
+                        controlador.eliminarVisitante(v.getPlaca());
+                    }
+                controlador.registrarEvento(new Evento("VEHICULO_RECHAZADO", "Placa "+ v.getPlaca()+ " Sin espacio disponible", "Garita "+ numero));
+                controlador.actualizarGarita(numero,"RECHAZADO "+ v.getPlaca() + " (Sin espacio)");
             } else {
+                controlador.registrarEvento(new Evento("VEHICULO_ASIGNADO", "Placa "+ v.getPlaca() + " asignada a " + espacio.getId(), "Garita "+ numero ));
                 controlador.actualizarEspacio(espacio);
                 controlador.actualizarGarita(numero, v.getPlaca() + " -> " + espacio.getId());
-                                Pila.global.push(new Evento("VEHICULO_ASIGNADO", "Placa " + v.getPlaca() + " -> " + espacio.getId(), "Garita " + numero));
-            }
-
             //controlador.actualizarGarita(numero, "libre");
         }
     }
-
+}
 }

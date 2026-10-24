@@ -154,5 +154,13 @@ public class Parqueo {
 
         return todas;
     }
+
+    public synchronized Espacio asignarVisitante(
+        Vehiculo vehiculo
+    ) {
+        return general.asignar(vehiculo);
+    }
+
+    
     //--------------------------------------------------------------------------------
 }

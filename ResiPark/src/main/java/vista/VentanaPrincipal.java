@@ -2,8 +2,8 @@ package vista;
 
 import javax.swing.*;
 
+import controlador.ControladorEntrada;
 import modelo.Pila;
-
 import java.awt.*;
 import java.awt.event.ActionListener;
 
@@ -25,6 +25,7 @@ public class VentanaPrincipal extends JFrame {
     private JButton btnSalida;
     private JTextArea areaColaSalida;
     private JLabel lblGaritaSalida;
+    private ControladorEntrada controladorEntrada;
     //--------------------------------------------------------------------------------
 
     // Arreglo simple con las 150 etiquetas, para buscarlas por id
@@ -38,31 +39,58 @@ public class VentanaPrincipal extends JFrame {
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLayout(new BorderLayout(10, 10));
 
-        // Norte: ingreso de vehículos
         JPanel panelNorte = new JPanel();
+
         panelNorte.add(new JLabel("Placa:"));
+
         txtPlaca = new JTextField(10);
         panelNorte.add(txtPlaca);
+
         chkSocio = new JCheckBox("Socio");
         panelNorte.add(chkSocio);
+
         btnEnviar = new JButton("Enviar a cola");
         panelNorte.add(btnEnviar);
+
         btnPrueba = new JButton("Enviar 10 de prueba");
         panelNorte.add(btnPrueba);
-            JButton btnResidentes = new JButton("Gestionar Residentes");
-            btnResidentes.addActionListener(e -> {
-            VentanaResidentes vr = new VentanaResidentes();
-            vr.setVisible(true);
-            });
-            panelNorte.add(btnResidentes);
-            JButton btnEventos = new JButton("Ver Eventos");
-            btnEventos.addActionListener(e -> {
-                VentanaEventos ventanaEventos = new VentanaEventos(Pila.global);
-                ventanaEventos.setVisible(true);
-            });
-            panelNorte.add(btnEventos);
-            add(panelNorte, BorderLayout.NORTH);
 
+        JButton btnResidentes =new JButton("Gestionar Residentes");
+
+        btnResidentes.addActionListener(e -> {
+        VentanaResidentes ventana = new VentanaResidentes();
+
+        ventana.setVisible(true);
+        });
+
+        panelNorte.add(btnResidentes);
+
+        JButton btnEventos =new JButton("Ver Eventos");
+
+        btnEventos.addActionListener(e -> {
+        VentanaEventos ventana =new VentanaEventos(Pila.global);
+
+        ventana.setVisible(true);
+        });
+
+        panelNorte.add(btnEventos);
+
+        JButton btnVisitante =
+        new JButton("Registrar Visitante");
+
+        btnVisitante.addActionListener(e -> {
+        if (controladorEntrada == null) {
+        JOptionPane.showMessageDialog(this,"El controlador de entrada aún no está disponible.");
+            return;
+        }
+
+        VentanaVisitante ventana = new VentanaVisitante(controladorEntrada);
+
+        ventana.setVisible(true);}); 
+
+        panelNorte.add(btnVisitante);
+
+        add(panelNorte, BorderLayout.NORTH);
         // Centro: el parqueo (el controlador agrega las áreas)
         panelParqueo = new JPanel();
         panelParqueo.setLayout(new BoxLayout(panelParqueo, BoxLayout.Y_AXIS));
@@ -225,5 +253,11 @@ public class VentanaPrincipal extends JFrame {
 
     public void mostrarMensaje(String mensaje) {
         JOptionPane.showMessageDialog(this, mensaje);
+    }
+
+    public void conectarControladorEntrada(
+        ControladorEntrada controlador
+    ) {
+        this.controladorEntrada = controlador;
     }
 }

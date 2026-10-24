@@ -21,6 +21,10 @@ public class Vehiculo {
         this.socio = socio;
         this.estado = EstadoVehiculo.FUERA;
     }
+    
+    public Vehiculo(String placa, boolean socio) {
+        this(placa,"","","","Visitante","",socio);
+    }
 
     // Constructor para visitantes (no tienen ID de residente, se les asigna null)
     public Vehiculo(String placa, String marca, String modelo, String color, String tipo) {

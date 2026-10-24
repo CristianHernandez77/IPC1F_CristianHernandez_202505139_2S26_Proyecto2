@@ -6,6 +6,8 @@ import modelo.Evento;
 import modelo.Parqueo;
 import modelo.Pila;
 import modelo.Vehiculo;
+import modelo.Visitante;
+import controlador.Administrador;
 
 // Hilo de la garita de salida: consume vehículos de la cola de salida
 public class GaritaSalida extends Thread {
@@ -33,7 +35,7 @@ public class GaritaSalida extends Thread {
 
             // Tiempo de atención (el enunciado pide entre 1 y 3 segundos)
             try{
-                Thread.sleep(5000 + (int) (Math.random() * 2000));
+                Thread.sleep(1000 + (int) (Math.random() * 2000));
             }catch(InterruptedException e){
                 break;
             }
@@ -44,6 +46,11 @@ public class GaritaSalida extends Thread {
                 controlador.actualizarGarita("ERROR: " + v.getPlaca() + " no tenía espacio");
             } else {
                 controlador.liberarEspacio(espacio);
+
+                Visitante visitante = Administrador.getInstance().getListaVisitantes().eliminarPorPlaca(v.getPlaca());
+                if(visitante != null){
+                    Pila.global.push(new Evento("VISITANTE_ELIMINADO", "Visitante "+ visitante.getNombre() + " salio del residencial", "Garita de salida"));
+                }
                 controlador.actualizarGarita(v.getPlaca() + " salió de " + espacio.getId());
                 Pila.global.push(new Evento("VEHICULO_SALIO", "Placa " + v.getPlaca() + " liberó " + espacio.getId(), "Garita Salida"));
             }

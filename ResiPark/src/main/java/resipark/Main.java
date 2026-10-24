@@ -17,16 +17,15 @@ public class Main {
         SwingUtilities.invokeLater(() -> {
 
             // Carga los datos antes de iniciar la interfaz
-            Administrador administrador =
-                    Administrador.getInstance();
+            Administrador administrador = Administrador.getInstance();
 
             Pila historial = Pila.global;
 
-            VentanaPrincipal vista =
-                    new VentanaPrincipal();
+            VentanaPrincipal vista = new VentanaPrincipal();
 
             ControladorEntrada controladorEntrada =
-                    new ControladorEntrada(vista, Pila.global);
+                    new ControladorEntrada(vista, historial);
+                    vista.conectarControladorEntrada(controladorEntrada);
             controladorEntrada.restaurarOcupacion();
             controladorEntrada.iniciarGaritas();
 
@@ -45,12 +44,15 @@ public class Main {
             vista.addWindowListener(new WindowAdapter() {
                 @Override
                 public void windowClosing(WindowEvent e) {
-                    Administrador.getInstance().guardarDatos(controladorEntrada.getParqueo());;             
+                    administrador.guardarDatos(controladorEntrada.getParqueo());            
                     System.exit(0);
                 }
             });
 
             vista.setVisible(true);
         });
+
+            
     }
+    
 }

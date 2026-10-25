@@ -23,7 +23,7 @@ public class VentanaEventos extends JFrame{
         JScrollPane scroll = new JScrollPane(areaEventos);
         scroll.setBorder(BorderFactory.createTitledBorder("Eventos (Más reciente primero)"));
         add(scroll, BorderLayout.CENTER);
-        temporizador = new Timer(1000, e -> actualizarVista());
+        temporizador = new Timer(10000, e -> actualizarVista());
         temporizador.start();
         actualizarVista();
     }

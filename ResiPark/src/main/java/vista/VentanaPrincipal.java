@@ -12,7 +12,6 @@ public class VentanaPrincipal extends JFrame {
     private static final Color COLOR_OCUPADO = new Color(235, 140, 140);
 
     private JTextField txtPlaca;
-    private JCheckBox chkSocio;
     private JButton btnEnviar;
     private JButton btnPrueba;
     private JTextArea areaCola;
@@ -45,9 +44,6 @@ public class VentanaPrincipal extends JFrame {
 
         txtPlaca = new JTextField(10);
         panelNorte.add(txtPlaca);
-
-        chkSocio = new JCheckBox("Socio");
-        panelNorte.add(chkSocio);
 
         btnEnviar = new JButton("Enviar a cola");
         panelNorte.add(btnEnviar);
@@ -198,10 +194,6 @@ public class VentanaPrincipal extends JFrame {
 
     public String getPlaca() {
         return txtPlaca.getText().trim();
-    }
-
-    public boolean isSocio() {
-        return chkSocio.isSelected();
     }
 
     public void limpiarPlaca() {

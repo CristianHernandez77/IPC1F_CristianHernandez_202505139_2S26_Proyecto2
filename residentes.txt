@@ -4,3 +4,6 @@ PRUEBA3|Residente Prueba 3|Casa P3|S
 PRUEBA4|Residente Prueba 4|Casa P4|S
 67|criis|casa 1|S
 64|nose|casa 2|N
+R1|Cristian|12|S
+01|Cristian|Casa 1|N
+02|Jose|Casa 2|N

@@ -4,10 +4,12 @@ import javax.swing.SwingUtilities;
 
 import modelo.Cola;
 import modelo.Espacio;
+//import modelo.Espacio;
 import modelo.EstadoVehiculo;
 import modelo.Evento;
 import modelo.Parqueo;
 import modelo.Pila;
+//import modelo.Pila;
 import modelo.Vehiculo;
 import vista.VentanaPrincipal;
 
@@ -47,6 +49,7 @@ public class ControladorSalida {
 
         // Sigue ocupando su espacio mientras espera en la cola
         cola.encolar(v);
+        Pila.global.push(new Evento("VEHICULO_EN_COLA_SALIDA","Placa " + placa,"Garita Salida"));
         actualizarCola();
         actualizarEstacionados();
     }
@@ -64,14 +67,12 @@ public class ControladorSalida {
         SwingUtilities.invokeLater(() -> vista.mostrarGaritaSalida(texto));
     }
 
-    public void liberarEspacio(Espacio espacio){
+    public void liberarEspacio(Espacio espacio) {
         if (espacio != null) {
-             String placa = espacio.getVehiculo() != null ? espacio.getVehiculo().getPlaca() : "Desconocida";
-             Pila.global.push(new Evento("VEHICULO_SALIO", "Placa " + placa + " liberó " + espacio.getId(), "Garita Salida"));
-             String id = espacio.getId();
-            SwingUtilities.invokeLater(() -> vista.pintarEspacio(id, null));
-        }   
-        
+        String id = espacio.getId();
+
+        SwingUtilities.invokeLater(() -> vista.pintarEspacio(id, null));
+        }
     }
 
     public void actualizarEstacionados(){

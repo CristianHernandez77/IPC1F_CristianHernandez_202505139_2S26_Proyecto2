@@ -291,10 +291,7 @@ public class Archivo {
     }
     }
     
-    public static void cargarOcupacion(
-        Parqueo parqueo,
-        ListaDoble residentes
-) {
+    public static void cargarOcupacion(Parqueo parqueo,ListaDoble residentes) {
     File archivo = new File(RUTA_OCUPACION);
 
     if (!archivo.exists()) {
@@ -364,6 +361,9 @@ public class Archivo {
                 continue;
             }
 
+            if (estado == EstadoVehiculo.EN_COLA_SALIDA) {
+                estado = EstadoVehiculo.ESTACIONADO;
+            }
             boolean restaurado = parqueo.restaurarVehiculo(
                     vehiculo,
                     idEspacio,

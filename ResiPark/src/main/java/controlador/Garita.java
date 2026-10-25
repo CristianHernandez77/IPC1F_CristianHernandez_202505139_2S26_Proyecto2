@@ -62,7 +62,7 @@ public class Garita extends Thread{
                 controlador.actualizarEspacio(espacio);
                 controlador.actualizarGarita(numero, v.getPlaca() + " -> " + espacio.getId());
             //controlador.actualizarGarita(numero, "libre");
+            }
         }
     }
-}
 }

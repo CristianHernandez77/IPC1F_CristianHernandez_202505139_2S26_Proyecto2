@@ -186,12 +186,11 @@ public class ListaCircularEspacios {
         if (!actual.isLibre()) {
             Vehiculo vehiculo = actual.getVehiculo();
             EstadoVehiculo estado = vehiculo.getEstado();
-             if (estado == EstadoVehiculo.ESTACIONADO ||
-                estado == EstadoVehiculo.EN_COLA_SALIDA) {
+            boolean esResidente = vehiculo.getIdResidente() != null && !vehiculo.getIdResidente().isEmpty();
+            boolean estadoValido = estado == EstadoVehiculo.ESTACIONADO || estado == EstadoVehiculo.EN_COLA_SALIDA;
 
-                texto += vehiculo.getPlaca() + "|" +
-                         estado.name() + "|" +
-                         actual.getId() + "\n";
+            if(esResidente && estadoValido){
+                texto += vehiculo.getPlaca() + "|" + estado.name() + "|" + actual.getId() + "\n";
             }
         }
 

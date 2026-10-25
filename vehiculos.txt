@@ -9,6 +9,7 @@ T8|Marca|Modelo|Color|Automóvil|PRUEBA3
 T9|Marca|Modelo|Color|Automóvil|PRUEBA4
 T10|Marca|Modelo|Color|Automóvil|PRUEBA4
 P234BLK|MACH|BEY|AZUL|Pickup|67
+PRU023|FABRICA|DE LOS BEBOS|NEGRO|Automóvil|67
 P324VLL|ma|ty|rojo|Pickup|64
 RES001|Toyota|Corolla|Azul|Automóvil|01
 RES101|SUSUKI|VELOZ|Naranja|Motocicleta|01
